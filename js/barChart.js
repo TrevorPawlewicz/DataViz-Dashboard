@@ -84,7 +84,7 @@ BarChart.prototype.wrangleData = function(){
 
 BarChart.prototype.updateVis = function(){
     var vis = this;
-
+    var colorz = ['#7fc97f','#beaed4','#fdc086','#ffff99','#386cb0','#f0027f','#bf5b17','#666666'];
     // Update scales
     vis.y.domain([0, d3.max(vis.dataFiltered, (d) => { return +d.size; })]);
 
@@ -124,5 +124,9 @@ BarChart.prototype.updateVis = function(){
         .attr("height", function(d){ return (vis.height - vis.y(d.size)); })
         .attr("x", function(d){ return vis.x(d.category) })
         .attr("width", vis.x.bandwidth)
-        .attr("fill", "grey")
+        .attr("fill", function(d, index, j) {
+            // var num = Math.floor(Math.random() * colorz.length + 1);
+            return colorz[index];
+         });
+        // .attr("fill", colorz[5])
 };

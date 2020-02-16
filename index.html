@@ -5,33 +5,34 @@
     <meta name="description" content="">
     <title>D3 DataViz Dashboard</title>
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-4.4.1.min.css">
     <!-- jQuery UI CSS -->
-    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <!-- <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.theme.min.css"> -->
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#"><img id="logo" src="img/comcast-logo.jpeg"></a>
         </div>
     </nav>
 
-    <!-- Bootstrap grid setup -->
     <div class="container">
         <div class="row">
             <div id="left-charts" class="col-sm-12 col-md-8">
+              <div class="card">
+                <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label>Dates: <span id="dateLabel1">01/01/2017</span> - <span id="dateLabel2">10/12/2017</span></label>
+                    <div class="col-md-6">
+                        <h6>Dates: <span id="dateLabel1">01/01/2017</span> - <span id="dateLabel2">10/12/2017</span></h6>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row var-select">
                     <div class="col-md-4">
                         <select id="var-select" class="form-control">
                             <option selected value="call_revenue">Revenue (USD)</option>
@@ -40,24 +41,33 @@
                         </select>
                     </div>
                 </div>
-                <div id="stacked-area"></div>
-                <div id="timeline"></div>
+              </div>
+              </div>
+
+                <div class="card">
+                  <div id="stacked-area"></div>
+                  <div id="timeline"></div>
+                </div>
             </div>
             <div id="right-charts" class="col-md-4 col-sm-12">
+              <div class="card">
+                <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-6 col-md-12" id="company-size"></div>
-                    <div class="col-sm-6 col-md-12" id="units-sold"></div>
-                    <div class="col-sm-6 col-md-12" id="revenue"></div>
-                    <div class="col-sm-6 col-md-12" id="call-duration"></div>
+                      <div class="col-sm-6 col-md-12" id="company-size"></div>
+                      <div class="col-sm-6 col-md-12" id="units-sold"></div>
+                      <div class="col-sm-6 col-md-12" id="revenue"></div>
+                      <div class="col-sm-6 col-md-12" id="call-duration"></div>
+                    </div>
                 </div>
+              </div>
             </div>
         </div>
     </div>
 
 <!-- External JS Libraries -->
 <script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap-4.4.1.min.js"></script>
+<!-- <script src="js/jquery-ui.min.js"></script> -->
 <script src="js/d3.min.js"></script>
 
 <!-- Custom JS -->

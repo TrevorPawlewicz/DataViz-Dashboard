@@ -1,8 +1,8 @@
-#chart-area svg {
+/* #chart-area svg {
     margin-left: auto;
     margin-right: auto;
     display: block;
-}
+} */
 
 #logo {
   height:50px;
@@ -13,8 +13,12 @@
   padding: 5px 0px;
 }
 
+.navbar {
+  margin-bottom: 20px;
+}
+
 body {
-  background-color: #F1F3F3    
+  background-color: #F1F3F3
 }
 
 .axis {
@@ -43,14 +47,14 @@ body {
   stroke: #777;
   stroke-width: 3px;
 }
-  
+
 .hover-line {
   stroke: #777;
   stroke-width: 2px;
   stroke-dasharray: 3,3;
 }
 
-#selections .col-md-4 {
+/* #selections .col-md-4 {
 	padding-top: 10px;
 	padding-bottom: 10px;
-}
+} */
