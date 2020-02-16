@@ -1,65 +1,151 @@
+StackedAreaChart = function(_parentElement){
+    this.parentElement = _parentElement;
 
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom;
+    this.initVis();
+};
 
-var parseDate = d3.timeParse("%Y %b %d");
+StackedAreaChart.prototype.initVis = function(){
+    var vis = this;
 
-var x = d3.scaleTime().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
-    z = d3.scaleOrdinal(d3.schemeCategory10);
+    vis.margin = { left:80, right:100, top:50, bottom:40 };
+    vis.height = 370 - vis.margin.top - vis.margin.bottom;
+    vis.width = 800 - vis.margin.left - vis.margin.right;
 
-var stack = d3.stack();
+    vis.svg = d3.select(vis.parentElement)
+        .append("svg")
+        .attr("width", vis.width + vis.margin.left + vis.margin.right)
+        .attr("height", vis.height + vis.margin.top + vis.margin.bottom);
+    vis.g = vis.svg.append("g")
+        .attr("transform", "translate(" + vis.margin.left +
+            ", " + vis.margin.top + ")");
 
-var area = d3.area()
-    .x(function(d, i) { return x(d.data.date); })
-    .y0(function(d) { return y(d[0]); })
-    .y1(function(d) { return y(d[1]); });
+    vis.t = () => { return d3.transition().duration(1000); }
 
-var g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    vis.color = d3.scaleOrdinal(d3.schemePastel1);
 
-d3.tsv("data.tsv", type).then(function(error, data) {
-  if (error) throw error;
+    vis.x = d3.scaleTime().range([0, vis.width]);
+    vis.y = d3.scaleLinear().range([vis.height, 0]);
 
-  var keys = data.columns.slice(1);
+    vis.yAxisCall = d3.axisLeft()
+    vis.xAxisCall = d3.axisBottom()
+        .ticks(4);
+    vis.xAxis = vis.g.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + vis.height +")");
+    vis.yAxis = vis.g.append("g")
+        .attr("class", "y axis");
 
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-  z.domain(keys);
-  stack.keys(keys);
+    vis.stack = d3.stack()
+        .keys(["west", "south", "northeast", "midwest"]);
 
-  var layer = g.selectAll(".layer")
-    .data(stack(data))
-    .enter().append("g")
-      .attr("class", "layer");
+    vis.area = d3.area()
+        .x(function(d) { return vis.x(parseTime(d.data.date)); })
+        .y0(function(d) { return vis.y(d[0]); })
+        .y1(function(d) { return vis.y(d[1]); });
 
-  layer.append("path")
-      .attr("class", "area")
-      .style("fill", function(d) { return z(d.key); })
-      .attr("d", area);
+    vis.addLegend();
 
-  layer.filter(function(d) { return d[d.length - 1][1] - d[d.length - 1][0] > 0.01; })
-    .append("text")
-      .attr("x", width - 6)
-      .attr("y", function(d) { return y((d[d.length - 1][0] + d[d.length - 1][1]) / 2); })
-      .attr("dy", ".35em")
-      .style("font", "10px sans-serif")
-      .style("text-anchor", "end")
-      .text(function(d) { return d.key; });
+    vis.wrangleData();
+};
 
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(10, "%"));
-});
+StackedAreaChart.prototype.wrangleData = function(){
+    var vis = this;
 
-function type(d, i, columns) {
-  d.date = parseDate(d.date);
-  for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = d[columns[i]] / 100;
-  return d;
+    vis.variable = $("#var-select").val()
+
+    vis.dayNest = d3.nest()
+        .key(function(d){ return formatTime(d.date); })
+        .entries(calls)
+
+    vis.dataFiltered = vis.dayNest
+        .map(function(day){
+            return day.values.reduce(function(accumulator, current){
+                accumulator.date = day.key
+                accumulator[current.team] = accumulator[current.team] + current[vis.variable]
+                return accumulator;
+            }, {
+                "northeast": 0,
+                "midwest": 0,
+                "south": 0,
+                "west": 0
+            })
+        })
+
+    vis.updateVis();
+};
+
+
+StackedAreaChart.prototype.updateVis = function(){
+    var vis = this;
+
+    vis.maxDateVal = d3.max(vis.dataFiltered, function(d){
+        var vals = d3.keys(d).map(function(key){ return key !== 'date' ? d[key] : 0 });
+        return d3.sum(vals);
+    });
+
+    // Update scales
+    vis.x.domain(d3.extent(vis.dataFiltered, (d) => {  return parseTime(d.date); }));
+    vis.y.domain([0, vis.maxDateVal]);
+
+    // Update axes
+    vis.xAxisCall.scale(vis.x);
+    vis.xAxis.transition(vis.t()).call(vis.xAxisCall);
+    vis.yAxisCall.scale(vis.y);
+    vis.yAxis.transition(vis.t()).call(vis.yAxisCall);
+
+    vis.teams = vis.g.selectAll(".team")
+        .data(vis.stack(vis.dataFiltered));
+
+    // Update the path for each team
+    vis.teams.select(".area")
+        .attr("d", vis.area)
+
+    vis.teams.enter().append("g")
+        .attr("class", function(d){ return "team " + d.key })
+        .append("path")
+            .attr("class", "area")
+            .attr("d", vis.area)
+            .style("fill", function(d){
+                return vis.color(d.key)
+            })
+            .style("fill-opacity", 0.5)
+};
+
+
+StackedAreaChart.prototype.addLegend = function(){
+    var vis = this;
+
+    var legend = vis.g.append("g")
+        .attr("transform", "translate(" + (50) +
+                    ", " + (-25) + ")");
+
+    var legendArray = [
+        {label: "Northeast", color: vis.color("northeast")},
+        {label: "West", color: vis.color("west")},
+        {label: "South", color: vis.color("south")},
+        {label: "Midwest", color: vis.color("midwest")}
+    ]
+
+    var legendCol = legend.selectAll(".legendCol")
+        .data(legendArray)
+        .enter().append("g")
+            .attr("class", "legendCol")
+            .attr("transform", (d, i) => {
+                return "translate(" + (i * 150) + ", " + (0) + ")"
+            });
+
+    legendCol.append("rect")
+        .attr("class", "legendRect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", d => { return d.color; })
+        .attr("fill-opacity", 0.5);
+
+    legendCol.append("text")
+        .attr("class", "legendText")
+        .attr("x", 20)
+        .attr("y", 10)
+        .attr("text-anchor", "start")
+        .text(d => { return d.label; });
 }

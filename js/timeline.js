@@ -1,4 +1,3 @@
-
 Timeline = function(_parentElement){
     this.parentElement = _parentElement;
 
