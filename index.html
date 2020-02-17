@@ -25,39 +25,51 @@
     <div class="container">
         <div class="row">
             <div id="left-charts" class="col-sm-12 col-md-8">
-              <div class="card">
-                <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Dates: <span id="dateLabel1">01/01/2017</span> - <span id="dateLabel2">10/12/2017</span></h6>
-                    </div>
+              <div class="card text-white bg-dark mb-3">
+                <div class="card-header">
+                  Dates: <span id="dateLabel1">01/01/2017</span> - <span id="dateLabel2">10/12/2017</span>
                 </div>
-                <div class="row var-select">
-                    <div class="col-md-4">
-                        <select id="var-select" class="form-control">
-                            <option selected value="call_revenue">Revenue (USD)</option>
-                            <option value="call_duration">Call Time (seconds)</option>
-                            <option value="units_sold">Units Sold</option>
-                        </select>
-                    </div>
+                <div class="card-body bg-secondary">
+                  <!-- <div class="row">
+                      <div class="col-md-6">
+                          <h6>Dates: <span id="dateLabel1">01/01/2017</span> - <span id="dateLabel2">10/12/2017</span></h6>
+                      </div>
+                  </div> -->
+                  <div class="row var-select">
+                      <div class="col-md-4">
+                          <select id="var-select" class="form-control">
+                              <option selected value="call_revenue">Revenue (USD)</option>
+                              <option value="call_duration">Call Time (seconds)</option>
+                              <option value="units_sold">Units Sold</option>
+                          </select>
+                      </div>
+                  </div>
                 </div>
-              </div>
               </div>
 
-                <div class="card">
+              <div class="card text-white bg-dark mb-3">
+                <div class="card-body bg-secondary">
                   <div id="stacked-area"></div>
                   <div id="timeline"></div>
                 </div>
+                <div class="card-footer">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+              </div>
             </div>
             <div id="right-charts" class="col-md-4 col-sm-12">
-              <div class="card">
-                <div class="card-body">
-                <div class="row">
-                      <div class="col-sm-6 col-md-12" id="company-size"></div>
-                      <div class="col-sm-6 col-md-12" id="units-sold"></div>
-                      <div class="col-sm-6 col-md-12" id="revenue"></div>
-                      <div class="col-sm-6 col-md-12" id="call-duration"></div>
-                    </div>
+              <div class="card text-white bg-dark mb-3">
+                <div class="card-header">Header</div>
+                <div class="card-body bg-secondary">
+                  <div class="row">
+                    <div class="col-sm-6 col-md-12" id="company-size"></div>
+                    <div class="col-sm-6 col-md-12" id="units-sold"></div>
+                    <div class="col-sm-6 col-md-12" id="revenue"></div>
+                    <div class="col-sm-6 col-md-12" id="call-duration"></div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">Last updated 3 mins ago</small>
                 </div>
               </div>
             </div>
