@@ -126,7 +126,7 @@ BarChart.prototype.updateVis = function(){
         .attr("width", vis.x.bandwidth)
         .attr("fill", function(d, index, j) {
             // var num = Math.floor(Math.random() * colorz.length + 1);
-            console.log("index:", index);
+            // console.log("index:", index);
             return colorz[index];
          });
         // .attr("fill", colorz[5])

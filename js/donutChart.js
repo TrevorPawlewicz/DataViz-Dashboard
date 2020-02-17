@@ -38,7 +38,8 @@ DonutChart.prototype.initVis = function(){
         .attr("text-anchor", "start")
         .text("Company size")
 
-    vis.color = d3.scaleOrdinal(d3.schemeAccent);
+    // vis.color = d3.scaleOrdinal(d3.schemeAccent);
+	vis.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     vis.addLegend();
 	vis.wrangleData();

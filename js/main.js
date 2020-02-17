@@ -66,3 +66,17 @@ function changeDates(values) {
     durationBar.wrangleData();
     stackedArea.wrangleData();
 }
+
+
+
+function updateClock() {
+    var now = new Date(), // current date
+        time = ((now.getHours() + 24) % 12 || 12) + ':' + now.getMinutes();
+
+    // set the content of the element with the ID time to the formatted string
+    document.getElementById('time').innerHTML = time;
+
+    // call this function again in 1000ms
+    // setTimeout(updateClock, 1000);
+}
+updateClock(); // initial call
