@@ -70,8 +70,8 @@ function changeDates(values) {
 
 
 function updateClock() {
-    var now = new Date(), // current date
-        time = ((now.getHours() + 24) % 12 || 12) + ':' + now.getMinutes();
+    var now = new Date(); // current date
+    var time = ((now.getHours() + 24) % 12 || 12) + ':' + ((now.getMinutes()<10?'0':'') + now.getMinutes());
 
     // set the content of the element with the ID time to the formatted string
     document.getElementById('time').innerHTML = time;
